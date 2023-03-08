@@ -63,7 +63,7 @@ export default class DataManager {
     const undefinedWidthColumns = columns.filter((c) =>
       c.width === undefined && c.columnDef
         ? c.columnDef.tableData.width === undefined
-        : true && !c.hidden
+        : !c.hidden
     );
     let usedWidth = ["0px"];
 
@@ -82,7 +82,6 @@ export default class DataManager {
             ? columnDef.width + "px"
             : columnDef.width,
         additionalWidth: 0,
-        ...columnDef.tableData,
         id: index,
       };
 
