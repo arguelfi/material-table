@@ -1,20 +1,20 @@
-import formatDate from "date-fns/format";
-import { byString } from "./";
+import formatDate from 'date-fns/format';
+import { byString } from './';
 
 export default class DataManager {
   applyFilters = false;
   applySearch = false;
   applySort = false;
   currentPage = 0;
-  detailPanelType = "multiple";
+  detailPanelType = 'multiple';
   lastDetailPanelRow = undefined;
   lastEditingRow = undefined;
   orderBy = -1;
-  orderDirection = "";
+  orderDirection = '';
   pageSize = 5;
   paging = true;
   parentFunc = null;
-  searchText = "";
+  searchText = '';
   selectedCount = 0;
   treefiedDataLength = 0;
   treeDataMaxLevel = 0;
@@ -43,9 +43,7 @@ export default class DataManager {
 
   rootGroupsIndex = {};
 
-  constructor() {}
-
-  setData(data) {
+  setData (data) {
     this.selectedCount = 0;
 
     this.data = data.map((row, index) => {
@@ -59,30 +57,30 @@ export default class DataManager {
     this.filtered = false;
   }
 
-  setColumns(columns) {
+  setColumns (columns) {
     const undefinedWidthColumns = columns.filter((c) =>
       c.width === undefined && c.columnDef
         ? c.columnDef.tableData.width === undefined
         : !c.hidden
     );
-    let usedWidth = ["0px"];
+    let usedWidth = ['0px'];
 
     this.columns = columns.map((columnDef, index) => {
       columnDef.tableData = {
         columnOrder: index,
         filterValue: columnDef.defaultFilter,
         groupOrder: columnDef.defaultGroupOrder,
-        groupSort: columnDef.defaultGroupSort || "asc",
+        groupSort: columnDef.defaultGroupSort || 'asc',
         width:
-          typeof columnDef.width === "number"
-            ? columnDef.width + "px"
+          typeof columnDef.width === 'number'
+            ? columnDef.width + 'px'
             : columnDef.width,
         initialWidth:
-          typeof columnDef.width === "number"
-            ? columnDef.width + "px"
+          typeof columnDef.width === 'number'
+            ? columnDef.width + 'px'
             : columnDef.width,
         additionalWidth: 0,
-        id: index,
+        id: index
       };
 
       if (columnDef.tableData.width !== undefined) {
@@ -92,56 +90,56 @@ export default class DataManager {
       return columnDef;
     });
 
-    usedWidth = "(" + usedWidth.join(" + ") + ")";
+    usedWidth = '(' + usedWidth.join(' + ') + ')';
     undefinedWidthColumns.forEach((columnDef) => {
       columnDef.tableData.width = columnDef.tableData.initialWidth = `calc((100% - ${usedWidth}) / ${undefinedWidthColumns.length})`;
     });
   }
 
-  setDefaultExpanded(expanded) {
+  setDefaultExpanded (expanded) {
     this.defaultExpanded = expanded;
   }
 
-  changeApplySearch(applySearch) {
+  changeApplySearch (applySearch) {
     this.applySearch = applySearch;
     this.searched = false;
   }
 
-  changeApplyFilters(applyFilters) {
+  changeApplyFilters (applyFilters) {
     this.applyFilters = applyFilters;
     this.filtered = false;
   }
 
-  changeApplySort(applySort) {
+  changeApplySort (applySort) {
     this.applySort = applySort;
     this.sorted = false;
   }
 
-  changePaging(paging) {
+  changePaging (paging) {
     this.paging = paging;
     this.paged = false;
   }
 
-  changeCurrentPage(currentPage) {
+  changeCurrentPage (currentPage) {
     this.currentPage = currentPage;
     this.paged = false;
   }
 
-  changePageSize(pageSize) {
+  changePageSize (pageSize) {
     this.pageSize = pageSize;
     this.paged = false;
   }
 
-  changeParentFunc(parentFunc) {
+  changeParentFunc (parentFunc) {
     this.parentFunc = parentFunc;
   }
 
-  changeFilterValue(columnId, value) {
+  changeFilterValue (columnId, value) {
     this.columns[columnId].tableData.filterValue = value;
     this.filtered = false;
   }
 
-  changeRowSelected(checked, path) {
+  changeRowSelected (checked, path) {
     const rowData = this.findDataByPath(this.sortedData, path);
     rowData.tableData.checked = checked;
     this.selectedCount = this.selectedCount + (checked ? 1 : -1);
@@ -163,11 +161,11 @@ export default class DataManager {
     this.filtered = false;
   }
 
-  changeDetailPanelVisibility(path, render) {
+  changeDetailPanelVisibility (path, render) {
     const rowData = this.findDataByPath(this.sortedData, path);
 
     if (
-      (rowData.tableData.showDetailPanel || "").toString() === render.toString()
+      (rowData.tableData.showDetailPanel || '').toString() === render.toString()
     ) {
       rowData.tableData.showDetailPanel = undefined;
     } else {
@@ -175,9 +173,9 @@ export default class DataManager {
     }
 
     if (
-      this.detailPanelType === "single" &&
+      this.detailPanelType === 'single' &&
       this.lastDetailPanelRow &&
-      this.lastDetailPanelRow != rowData
+      this.lastDetailPanelRow !== rowData
     ) {
       this.lastDetailPanelRow.tableData.showDetailPanel = undefined;
     }
@@ -185,22 +183,22 @@ export default class DataManager {
     this.lastDetailPanelRow = rowData;
   }
 
-  changeGroupExpand(path) {
+  changeGroupExpand (path) {
     const rowData = this.findDataByPath(this.sortedData, path);
     rowData.isExpanded = !rowData.isExpanded;
   }
 
-  changeSearchText(searchText) {
+  changeSearchText (searchText) {
     this.searchText = searchText;
     this.searched = false;
     this.currentPage = 0;
   }
 
-  changeRowEditing(rowData, mode) {
+  changeRowEditing (rowData, mode) {
     if (rowData) {
       rowData.tableData.editing = mode;
 
-      if (this.lastEditingRow && this.lastEditingRow != rowData) {
+      if (this.lastEditingRow && this.lastEditingRow !== rowData) {
         this.lastEditingRow.tableData.editing = undefined;
       }
 
@@ -215,13 +213,13 @@ export default class DataManager {
     }
   }
 
-  changeBulkEditOpen(bulkEditOpen) {
+  changeBulkEditOpen (bulkEditOpen) {
     this.bulkEditOpen = bulkEditOpen;
   }
 
-  changeAllSelected(checked) {
+  changeAllSelected (checked) {
     let selectedCount = 0;
-    if (this.isDataType("group")) {
+    if (this.isDataType('group')) {
       const setCheck = (data) => {
         data.forEach((element) => {
           if (element.groups.length > 0) {
@@ -247,7 +245,7 @@ export default class DataManager {
     this.selectedCount = checked ? selectedCount : 0;
   }
 
-  changeOrder(orderBy, orderDirection) {
+  changeOrder (orderBy, orderDirection) {
     this.orderBy = orderBy;
     this.orderDirection = orderDirection;
     this.currentPage = 0;
@@ -255,33 +253,33 @@ export default class DataManager {
     this.sorted = false;
   }
 
-  changeGroupOrder(columnId) {
+  changeGroupOrder (columnId) {
     const column = this.columns.find((c) => c.tableData.id === columnId);
 
-    if (column.tableData.groupSort === "asc") {
-      column.tableData.groupSort = "desc";
+    if (column.tableData.groupSort === 'asc') {
+      column.tableData.groupSort = 'desc';
     } else {
-      column.tableData.groupSort = "asc";
+      column.tableData.groupSort = 'asc';
     }
 
     this.sorted = false;
   }
 
-  changeColumnHidden(column, hidden) {
+  changeColumnHidden (column, hidden) {
     column.hidden = hidden;
     column.hiddenByColumnsButton = hidden;
   }
 
-  changeTreeExpand(path) {
+  changeTreeExpand (path) {
     const rowData = this.findDataByPath(this.sortedData, path);
     rowData.tableData.isTreeExpanded = !rowData.tableData.isTreeExpanded;
   }
 
-  changeDetailPanelType(type) {
+  changeDetailPanelType (type) {
     this.detailPanelType = type;
   }
 
-  changeByDrag(result) {
+  changeByDrag (result) {
     let start = 0;
 
     let groups = this.columns
@@ -291,8 +289,8 @@ export default class DataManager {
       );
 
     if (
-      result.destination.droppableId === "groups" &&
-      result.source.droppableId === "groups"
+      result.destination.droppableId === 'groups' &&
+      result.source.droppableId === 'groups'
     ) {
       start = Math.min(result.destination.index, result.source.index);
       const end = Math.max(result.destination.index, result.source.index);
@@ -309,11 +307,11 @@ export default class DataManager {
         groups.push(last);
       }
     } else if (
-      result.destination.droppableId === "groups" &&
-      result.source.droppableId === "headers"
+      result.destination.droppableId === 'groups' &&
+      result.source.droppableId === 'headers'
     ) {
       const newGroup = this.columns.find(
-        (c) => c.tableData.id == result.draggableId
+        (c) => c.tableData.id === result.draggableId
       );
 
       if (newGroup.grouping === false || !newGroup.field) {
@@ -322,17 +320,17 @@ export default class DataManager {
 
       groups.splice(result.destination.index, 0, newGroup);
     } else if (
-      result.destination.droppableId === "headers" &&
-      result.source.droppableId === "groups"
+      result.destination.droppableId === 'headers' &&
+      result.source.droppableId === 'groups'
     ) {
       const removeGroup = this.columns.find(
-        (c) => c.tableData.id == result.draggableId
+        (c) => c.tableData.id === result.draggableId
       );
       removeGroup.tableData.groupOrder = undefined;
       groups.splice(result.source.index, 1);
     } else if (
-      result.destination.droppableId === "headers" &&
-      result.source.droppableId === "headers"
+      result.destination.droppableId === 'headers' &&
+      result.source.droppableId === 'headers'
     ) {
       start = Math.min(result.destination.index, result.source.index);
       const end = Math.max(result.destination.index, result.source.index);
@@ -397,13 +395,13 @@ export default class DataManager {
   startCellEditable = (rowData, columnDef) => {
     rowData.tableData.editCellList = [
       ...(rowData.tableData.editCellList || []),
-      columnDef,
+      columnDef
     ];
   };
 
   finishCellEditable = (rowData, columnDef) => {
     if (rowData.tableData.editCellList) {
-      var index = rowData.tableData.editCellList.findIndex(
+      const index = rowData.tableData.editCellList.findIndex(
         (c) => c.tableData.id === columnDef.tableData.id
       );
       if (index !== -1) {
@@ -419,11 +417,11 @@ export default class DataManager {
   onBulkEditRowChanged = (oldData, newData) => {
     this.bulkEditChangedRows[oldData.tableData.id] = {
       oldData,
-      newData,
+      newData
     };
   };
 
-  onColumnResized(id, additionalWidth) {
+  onColumnResized (id, additionalWidth) {
     const column = this.columns.find((c) => c.tableData.id === id);
     if (!column) return;
 
@@ -449,7 +447,7 @@ export default class DataManager {
     data.forEach((row) => {
       let currentRow = row;
       while (this.parentFunc(currentRow, this.data)) {
-        let parent = this.parentFunc(currentRow, this.data);
+        const parent = this.parentFunc(currentRow, this.data);
         if (parent) {
           parent.tableData.isTreeExpanded = true;
         }
@@ -459,7 +457,7 @@ export default class DataManager {
   };
 
   findDataByPath = (renderData, path) => {
-    if (this.isDataType("tree")) {
+    if (this.isDataType('tree')) {
       const node = path.reduce(
         (result, current) => {
           return (
@@ -489,7 +487,7 @@ export default class DataManager {
     }
   };
 
-  findGroupByGroupPath(renderData, path) {
+  findGroupByGroupPath (renderData, path) {
     const data = { groups: renderData, groupsIndex: this.rootGroupsIndex };
 
     const node = path.reduce((result, current) => {
@@ -509,7 +507,7 @@ export default class DataManager {
 
   getFieldValue = (rowData, columnDef, lookup = true) => {
     let value =
-      typeof rowData[columnDef.field] !== "undefined"
+      typeof rowData[columnDef.field] !== 'undefined'
         ? rowData[columnDef.field]
         : byString(rowData, columnDef.field);
     if (columnDef.lookup && lookup) {
@@ -519,20 +517,20 @@ export default class DataManager {
     return value;
   };
 
-  isDataType(type) {
-    let dataType = "normal";
+  isDataType (type) {
+    let dataType = 'normal';
 
     if (this.parentFunc) {
-      dataType = "tree";
+      dataType = 'tree';
     } else if (this.columns.find((a) => a.tableData.groupOrder > -1)) {
-      dataType = "group";
+      dataType = 'group';
     }
 
     return type === dataType;
   }
 
-  sort(a, b, type) {
-    if (type === "numeric") {
+  sort (a, b, type) {
+    if (type === 'numeric') {
       return a - b;
     } else {
       if (a !== b) {
@@ -544,19 +542,19 @@ export default class DataManager {
     }
   }
 
-  sortList(list) {
+  sortList (list) {
     const columnDef = this.columns.find((_) => _.tableData.id === this.orderBy);
     let result = list;
 
     if (columnDef.customSort) {
-      if (this.orderDirection === "desc") {
-        result = list.sort((a, b) => columnDef.customSort(b, a, "row", "desc"));
+      if (this.orderDirection === 'desc') {
+        result = list.sort((a, b) => columnDef.customSort(b, a, 'row', 'desc'));
       } else {
-        result = list.sort((a, b) => columnDef.customSort(a, b, "row"));
+        result = list.sort((a, b) => columnDef.customSort(a, b, 'row'));
       }
     } else {
       result = list.sort(
-        this.orderDirection === "desc"
+        this.orderDirection === 'desc'
           ? (a, b) =>
               this.sort(
                 this.getFieldValue(b, columnDef),
@@ -584,11 +582,11 @@ export default class DataManager {
       this.searchData();
     }
 
-    if (this.grouped === false && this.isDataType("group")) {
+    if (this.grouped === false && this.isDataType('group')) {
       this.groupData();
     }
 
-    if (this.treefied === false && this.isDataType("tree")) {
+    if (this.treefied === false && this.isDataType('tree')) {
       this.treefyData();
     }
 
@@ -614,7 +612,7 @@ export default class DataManager {
       selectedCount: this.selectedCount,
       treefiedDataLength: this.treefiedDataLength,
       treeDataMaxLevel: this.treeDataMaxLevel,
-      groupedDataLength: this.groupedDataLength,
+      groupedDataLength: this.groupedDataLength
     };
   };
 
@@ -653,47 +651,47 @@ export default class DataManager {
                   ) > -1
                 );
               });
-            } else if (type === "numeric") {
+            } else if (type === 'numeric') {
               this.filteredData = this.filteredData.filter((row) => {
                 const value = this.getFieldValue(row, columnDef);
-                return value + "" === tableData.filterValue;
+                return value + '' === tableData.filterValue;
               });
-            } else if (type === "boolean" && tableData.filterValue) {
+            } else if (type === 'boolean' && tableData.filterValue) {
               this.filteredData = this.filteredData.filter((row) => {
                 const value = this.getFieldValue(row, columnDef);
                 return (
-                  (value && tableData.filterValue === "checked") ||
-                  (!value && tableData.filterValue === "unchecked")
+                  (value && tableData.filterValue === 'checked') ||
+                  (!value && tableData.filterValue === 'unchecked')
                 );
               });
-            } else if (["date", "datetime"].includes(type)) {
+            } else if (['date', 'datetime'].includes(type)) {
               this.filteredData = this.filteredData.filter((row) => {
                 const value = this.getFieldValue(row, columnDef);
 
                 const currentDate = value ? new Date(value) : null;
 
-                if (currentDate && currentDate.toString() !== "Invalid Date") {
+                if (currentDate && currentDate.toString() !== 'Invalid Date') {
                   const selectedDate = tableData.filterValue;
-                  let currentDateToCompare = "";
-                  let selectedDateToCompare = "";
+                  let currentDateToCompare = '';
+                  let selectedDateToCompare = '';
 
-                  if (type === "date") {
+                  if (type === 'date') {
                     currentDateToCompare = formatDate(
                       currentDate,
-                      "MM/dd/yyyy"
+                      'MM/dd/yyyy'
                     );
                     selectedDateToCompare = formatDate(
                       selectedDate,
-                      "MM/dd/yyyy"
+                      'MM/dd/yyyy'
                     );
-                  } else if (type === "datetime") {
+                  } else if (type === 'datetime') {
                     currentDateToCompare = formatDate(
                       currentDate,
-                      "MM/dd/yyyy - HH:mm"
+                      'MM/dd/yyyy - HH:mm'
                     );
                     selectedDateToCompare = formatDate(
                       selectedDate,
-                      "MM/dd/yyyy - HH:mm"
+                      'MM/dd/yyyy - HH:mm'
                     );
                   }
 
@@ -702,7 +700,7 @@ export default class DataManager {
 
                 return true;
               });
-            } else if (type === "time") {
+            } else if (type === 'time') {
               this.filteredData = this.filteredData.filter((row) => {
                 const value = this.getFieldValue(row, columnDef);
                 const currentHour = value || null;
@@ -711,7 +709,7 @@ export default class DataManager {
                   const selectedHour = tableData.filterValue;
                   const currentHourToCompare = formatDate(
                     selectedHour,
-                    "HH:mm"
+                    'HH:mm'
                   );
 
                   return currentHour === currentHourToCompare;
@@ -768,13 +766,14 @@ export default class DataManager {
                   .includes(trimmedSearchText.toUpperCase());
               }
             }
+            return null;
           });
       });
     }
     this.searched = true;
   };
 
-  groupData() {
+  groupData () {
     this.sorted = this.paged = false;
     this.groupedDataLength = 0;
 
@@ -800,14 +799,14 @@ export default class DataManager {
 
           if (!group) {
             const path = [...(o.path || []), value];
-            let oldGroup = this.findGroupByGroupPath(
+            const oldGroup = this.findGroupByGroupPath(
               this.groupedData,
               path
             ) || {
               isExpanded:
-                typeof this.defaultExpanded === "boolean"
+                typeof this.defaultExpanded === 'boolean'
                   ? this.defaultExpanded
-                  : false,
+                  : false
             };
 
             group = {
@@ -816,7 +815,7 @@ export default class DataManager {
               groupsIndex: {},
               data: [],
               isExpanded: oldGroup.isExpanded,
-              path: path,
+              path
             };
             o.groups.push(group);
             o.groupsIndex[value] = o.groups.length - 1;
@@ -837,7 +836,7 @@ export default class DataManager {
     this.rootGroupsIndex = subData.groupsIndex;
   }
 
-  treefyData() {
+  treefyData () {
     this.sorted = this.paged = false;
     this.data.forEach((a) => (a.tableData.childRows = null));
     this.treefiedData = [];
@@ -859,7 +858,7 @@ export default class DataManager {
 
     const addRow = (rowData) => {
       rowData.tableData.markedForTreeRemove = false;
-      let parent = this.parentFunc(rowData, this.data);
+      const parent = this.parentFunc(rowData, this.data);
       if (parent) {
         parent.tableData.childRows = parent.tableData.childRows || [];
         if (!parent.tableData.childRows.includes(rowData)) {
@@ -871,7 +870,7 @@ export default class DataManager {
 
         rowData.tableData.path = [
           ...parent.tableData.path,
-          parent.tableData.childRows.length - 1,
+          parent.tableData.childRows.length - 1
         ];
         this.treeDataMaxLevel = Math.max(
           this.treeDataMaxLevel,
@@ -917,8 +916,8 @@ export default class DataManager {
         !this.columns.some((columnDef) => columnDef.tableData.filterValue)
       ) {
         if (rowData.tableData.isTreeExpanded === undefined) {
-          var isExpanded =
-            typeof this.defaultExpanded === "boolean"
+          const isExpanded =
+            typeof this.defaultExpanded === 'boolean'
               ? this.defaultExpanded
               : this.defaultExpanded(rowData);
           rowData.tableData.isTreeExpanded = isExpanded;
@@ -939,7 +938,7 @@ export default class DataManager {
     });
 
     const traverseTreeAndDeleteMarked = (rowDataArray) => {
-      for (var i = rowDataArray.length - 1; i >= 0; i--) {
+      for (let i = rowDataArray.length - 1; i >= 0; i--) {
         const item = rowDataArray[i];
         if (item.tableData.childRows) {
           traverseTreeAndDeleteMarked(item.tableData.childRows);
@@ -952,10 +951,10 @@ export default class DataManager {
     this.treefied = true;
   }
 
-  sortData() {
+  sortData () {
     this.paged = false;
 
-    if (this.isDataType("group")) {
+    if (this.isDataType('group')) {
       this.sortedData = [...this.groupedData];
 
       const groups = this.columns
@@ -967,13 +966,13 @@ export default class DataManager {
       const sortGroups = (list, columnDef) => {
         if (columnDef.customSort) {
           return list.sort(
-            columnDef.tableData.groupSort === "desc"
-              ? (a, b) => columnDef.customSort(b.value, a.value, "group")
-              : (a, b) => columnDef.customSort(a.value, b.value, "group")
+            columnDef.tableData.groupSort === 'desc'
+              ? (a, b) => columnDef.customSort(b.value, a.value, 'group')
+              : (a, b) => columnDef.customSort(a.value, b.value, 'group')
           );
         } else {
           return list.sort(
-            columnDef.tableData.groupSort === "desc"
+            columnDef.tableData.groupSort === 'desc'
               ? (a, b) => this.sort(b.value, a.value, columnDef.type)
               : (a, b) => this.sort(a.value, b.value, columnDef.type)
           );
@@ -997,9 +996,9 @@ export default class DataManager {
       };
 
       sortGroupData(this.sortedData, 1);
-    } else if (this.isDataType("tree")) {
+    } else if (this.isDataType('tree')) {
       this.sortedData = [...this.treefiedData];
-      if (this.orderBy != -1) {
+      if (this.orderBy !== -1) {
         this.sortedData = this.sortList(this.sortedData);
 
         const sortTree = (list) => {
@@ -1015,9 +1014,9 @@ export default class DataManager {
 
         sortTree(this.sortedData);
       }
-    } else if (this.isDataType("normal")) {
+    } else if (this.isDataType('normal')) {
       this.sortedData = [...this.searchedData];
-      if (this.orderBy != -1 && this.applySort) {
+      if (this.orderBy !== -1 && this.applySort) {
         this.sortedData = this.sortList(this.sortedData);
       }
     }
@@ -1025,7 +1024,7 @@ export default class DataManager {
     this.sorted = true;
   }
 
-  pageData() {
+  pageData () {
     this.pagedData = [...this.sortedData];
 
     if (this.paging) {

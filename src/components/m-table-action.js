@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-vars */
-import * as React from "react";
-import PropTypes from "prop-types";
-import Icon from "@mui/material/Icon";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import Icon from '@mui/material/Icon';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 /* eslint-enable no-unused-vars */
 
 class MTableAction extends React.Component {
-  render() {
+  render () {
     let action = this.props.action;
 
-    if (typeof action === "function") {
+    if (typeof action === 'function') {
       action = action(this.props.data);
       if (!action) {
         return null;
@@ -38,13 +38,17 @@ class MTableAction extends React.Component {
     };
 
     const icon =
-      typeof action.icon === "string" ? (
+      typeof action.icon === 'string'
+        ? (
         <Icon {...action.iconProps}>{action.icon}</Icon>
-      ) : typeof action.icon === "function" ? (
-        action.icon({ ...action.iconProps, disabled: disabled })
-      ) : (
+          )
+        : typeof action.icon === 'function'
+          ? (
+              action.icon({ ...action.iconProps, disabled })
+            )
+          : (
         <action.icon />
-      );
+            );
 
     const button = (
       <IconButton
@@ -60,13 +64,15 @@ class MTableAction extends React.Component {
     if (action.tooltip) {
       // fix for issue #1049
       // https://github.com/mbrn/material-table/issues/1049
-      return disabled ? (
+      return disabled
+        ? (
         <Tooltip title={action.tooltip}>
           <span>{button}</span>
         </Tooltip>
-      ) : (
+          )
+        : (
         <Tooltip title={action.tooltip}>{button}</Tooltip>
-      );
+          );
     } else {
       return button;
     }
@@ -75,17 +81,17 @@ class MTableAction extends React.Component {
 
 MTableAction.defaultProps = {
   action: {},
-  data: {},
+  data: {}
 };
 
 MTableAction.propTypes = {
   action: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
   data: PropTypes.oneOfType([
     PropTypes.object,
-    PropTypes.arrayOf(PropTypes.object),
+    PropTypes.arrayOf(PropTypes.object)
   ]),
   disabled: PropTypes.bool,
-  size: PropTypes.string,
+  size: PropTypes.string
 };
 
 export default MTableAction;

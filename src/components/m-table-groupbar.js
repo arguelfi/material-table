@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
-import Toolbar from "@mui/material/Toolbar";
-import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
-import * as React from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import Toolbar from '@mui/material/Toolbar';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import * as React from 'react';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 /* eslint-enable no-unused-vars */
 
 class MTableGroupbar extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
   getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
-    userSelect: "none",
+    userSelect: 'none',
     // padding: '8px 16px',
     margin: `0 ${8}px 0 0`,
 
@@ -23,23 +23,23 @@ class MTableGroupbar extends React.Component {
     // background: isDragging ? 'lightgreen' : 'grey',
 
     // styles we need to apply on draggables
-    ...draggableStyle,
+    ...draggableStyle
   });
 
   getListStyle = (isDraggingOver) => ({
     // background: isDraggingOver ? 'lightblue' : '#0000000a',
-    background: "#0000000a",
-    display: "flex",
-    width: "100%",
+    background: '#0000000a',
+    display: 'flex',
+    width: '100%',
     padding: 8,
-    overflow: "auto",
-    border: "1px solid #ccc",
-    borderStyle: "dashed",
+    overflow: 'auto',
+    border: '1px solid #ccc',
+    borderStyle: 'dashed'
   });
 
-  render() {
+  render () {
     return (
-      <Toolbar style={{ padding: 0, minHeight: "unset" }}>
+      <Toolbar style={{ padding: 0, minHeight: 'unset' }}>
         <Droppable
           droppableId="groups"
           direction="horizontal"
@@ -77,26 +77,26 @@ class MTableGroupbar extends React.Component {
                           onClick={() => this.props.onSortChanged(columnDef)}
                           label={
                             <div
-                              style={{ display: "flex", alignItems: "center" }}
+                              style={{ display: 'flex', alignItems: 'center' }}
                             >
-                              <div style={{ float: "left" }}>
+                              <div style={{ float: 'left' }}>
                                 {columnDef.title}
                               </div>
                               {columnDef.tableData.groupSort && (
                                 <this.props.icons.SortArrow
                                   style={{
-                                    transition: "300ms ease all",
+                                    transition: '300ms ease all',
                                     transform:
-                                      columnDef.tableData.groupSort === "asc"
-                                        ? "rotate(-180deg)"
-                                        : "none",
-                                    fontSize: 18,
+                                      columnDef.tableData.groupSort === 'asc'
+                                        ? 'rotate(-180deg)'
+                                        : 'none',
+                                    fontSize: 18
                                   }}
                                 />
                               )}
                             </div>
                           }
-                          style={{ boxShadow: "none", textTransform: "none" }}
+                          style={{ boxShadow: 'none', textTransform: 'none' }}
                           onDelete={() =>
                             this.props.onGroupRemoved(columnDef, index)
                           }
@@ -125,8 +125,8 @@ MTableGroupbar.defaultProps = {};
 MTableGroupbar.propTypes = {
   localization: PropTypes.shape({
     groupedBy: PropTypes.string,
-    placeholder: PropTypes.string,
-  }),
+    placeholder: PropTypes.string
+  })
 };
 
 export default MTableGroupbar;

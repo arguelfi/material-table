@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "standard",
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "root": true,
+  "rules": {
+    "one-var": "off",
+    "semi": [
+      "error",
+      "always",
+      {
+        "omitLastInOneLineBlock": true
+      }
+    ],
+    "react/prop-types": [
+      "off"
+    ]
+  },
+  "parser": "@babel/eslint-parser",
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
